@@ -1,1 +1,1 @@
-Simple personal blog using Flask. Adapated from Miguel Grinberg's Mega-Flask Tutorial
+Simple personal blog using Flask. Adapted from Miguel Grinberg's Mega-Flask Tutorial
