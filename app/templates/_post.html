@@ -1,0 +1,11 @@
+<div class="post">
+    <h2><a class="nostyle" href="{{url_for('main.view', slug = post.slug)}}">{{post.title}}</a>
+        {% if current_user.is_authenticated %}
+        <a href="{{url_for('main.edit', slug=post.slug)}}" class="edit_btn">[edit]</a>
+        <a href="{{url_for('main.delete', slug=post.slug)}}" class="delete_btn">[delete]</a>{% endif %}
+    </h2>
+    <p class="byline">by {{post.author.username}} on
+        {{post.timestamp.month}}/{{post.timestamp.day}}/{{post.timestamp.year}}
+    </p>
+    <p class="body">{{post.body | safe}}</p>
+</div>

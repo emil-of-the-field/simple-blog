@@ -1,0 +1,52 @@
+body {
+    background-color: hsl(220, 13%, 18%);
+    color: white;
+}
+
+a.nostyle:link {
+    text-decoration: inherit;
+    color: inherit;
+    font-style: bold;
+    font-weight: 800;
+}
+
+a.nostyle:visited {
+    text-decoration: inherit;
+    color: inherit;
+    font-style: bold;
+    font-weight: 800;
+}
+
+a.edit_btn {
+    margin-left: .5em;
+    font-size: smaller;
+    text-decoration: none;
+}
+
+a.delete_btn {
+    margin-left: .5em;
+    font-size: smaller;
+    text-decoration: none;
+}
+
+
+p.byline {
+    font-style: italic;
+}
+
+nav>div>ul.navbar-nav>a {
+    color: white;
+}
+
+li.nav-item {
+    color: white;
+}
+
+nav.navbar {
+    margin-bottom: 1.5em;
+    background-color: #275274;
+}
+
+div.post {
+    margin-bottom: 1.5em;
+}
