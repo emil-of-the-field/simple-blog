@@ -5,7 +5,7 @@
         <a href="{{url_for('main.delete', slug=post.slug)}}" class="delete_btn">[delete]</a>{% endif %}
     </h2>
     <p class="byline">by {{post.author.username}} on
-        {{post.timestamp.month}}/{{post.timestamp.day}}/{{post.timestamp.year}}
+        {{post.timestamp.month}}/{{post.timestamp.day}}/{{post.timestamp.year}} tagged under {{post.tags}}
     </p>
     <p class="body">{{post.body | safe}}</p>
 </div>
