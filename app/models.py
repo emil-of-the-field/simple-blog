@@ -50,8 +50,12 @@ class Post(db.Model):
         self.title = title
         self.body = body
         self.slug = slugify(title)
-        self.tags = self.tags.split()
+        self.tags = tags
         self.author = author
+
+    @property
+    def tag_names(self):
+        return self.tags.split()
     
 @login.user_loader
 def load_user(id):
