@@ -20,7 +20,7 @@ def utility_processor():
 def utility_processor():
     def get_tags():
         user = db.session.scalar(sa.select(User, 1))
-        query = user.posts.select(Post.tag_names)
+        query = user.posts.select().order_by(Post.tag_names.desc())
         tags = db.session.scalars(query).all()
         return tags
     return dict(get_tags=get_tags)

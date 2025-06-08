@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
+from sqlalchemy import Table, Column, ForeignKey
 from sqlalchemy.orm import column_property
 from sqlalchemy.ext.hybrid import hybrid_property
 from app import db, login
@@ -9,6 +10,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from slugify import slugify
 
+
+tags_table = db.Table(
+    'tags_assocation',
+    db.Column('post_id', db.ForeignKey('post.id'), primary_key=True),
+    db.Column('tag_id', db.ForeignKey('tag.id'), primary_key=True)
+)
 
 class User(UserMixin, db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -30,6 +37,13 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
+class Tag(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(64), index=True)
+
+    def __repr__(self):
+        return f'<Tag> {self.name}'
+    
 class Post(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     title: so.Mapped[str] = so.mapped_column(sa.String(128))
@@ -39,23 +53,22 @@ class Post(db.Model):
         index=True, default=lambda: datetime.now(timezone.utc))
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
                                                index=True)
-    tags: so.Mapped[str] = so.mapped_column(sa.String(250), index=True, default='', nullable=True)
+    
+    tags: so.Mapped[Tag] = so.relationship(secondary=tags_table, back_populates='tags')
 
     author: so.Mapped[User] = so.relationship(back_populates='posts')
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
     
-    def __init__(self, title, body, tags, author):
+    def __init__(self, title, body, author):
         self.title = title
         self.body = body
         self.slug = slugify(title)
-        self.tags = tags
         self.author = author
 
-    @property
-    def tag_names(self):
-        return self.tags.split(' ')
+
+
     
 @login.user_loader
 def load_user(id):
