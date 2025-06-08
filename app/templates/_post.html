@@ -1,11 +1,11 @@
-<div class="post">
+<div class="header">
     <h2><a class="nostyle" href="{{url_for('main.view', slug = post.slug)}}">{{post.title}}</a>
         {% if current_user.is_authenticated %}
         <a href="{{url_for('main.edit', slug=post.slug)}}" class="edit_btn">[edit]</a>
         <a href="{{url_for('main.delete', slug=post.slug)}}" class="delete_btn">[delete]</a>{% endif %}
     </h2>
     <p class="byline">by {{post.author.username}} on
-        {{post.timestamp.month}}/{{post.timestamp.day}}/{{post.timestamp.year}} tagged under {{post.tags}}
+        {{post.timestamp.month}}/{{post.timestamp.day}}/{{post.timestamp.year}} tagged under
+        {% for tag in post.tag_names %}<span class="tag">{{tag}}</span>{% endfor %}
     </p>
-    <p class="body">{{post.body | safe}}</p>
 </div>

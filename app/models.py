@@ -55,7 +55,7 @@ class Post(db.Model):
 
     @property
     def tag_names(self):
-        return self.tags.split()
+        return self.tags.split(' ')
     
 @login.user_loader
 def load_user(id):
