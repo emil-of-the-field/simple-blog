@@ -52,12 +52,14 @@ def edit(slug):
     if form.validate_on_submit():
         post.title = form.title.data
         post.body = form.body.data
+        post.tags = form.tags.data
         db.session.commit()
         flash('Your changes have been saved')
         return redirect(url_for('main.view', slug=post.slug))
     elif request.method == "GET":
         form.title.data = post.title
         form.body.data = post.body
+        form.tags.data = post.tags
     return render_template('edit_post.html', title='Edit Post', post=post, form=form)
 
 @bp.route('/post/delete/<slug>', methods=["GET", "POST"])

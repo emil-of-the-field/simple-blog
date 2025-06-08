@@ -6,6 +6,6 @@
     </h2>
     <p class="byline">by {{post.author.username}} on
         {{post.timestamp.month}}/{{post.timestamp.day}}/{{post.timestamp.year}} tagged under
-        {% for tag in post.tag_names %}<span class="tag">{{tag}}</span>{% endfor %}
+        {% for tag in post.tag_names %}<span class="tag">{{tag.capitalize()}}</span>{% endfor %}
     </p>
 </div>

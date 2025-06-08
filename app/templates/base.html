@@ -87,7 +87,16 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <div class="card text-center">Search Posts by Tag</div>
+                <div class="card">
+                    <div class="card-header text-center">Search Posts by Tag</div>
+                    <div class="card-text"></div>
+                    {% set tags = get_tags() %}
+                    <ul class="list-group"></ul>
+                    {% for tag in tags %}
+                    <li class="list-group-item">{{tag}}</li>
+                    {% endfor %}
+                </div>
+
             </div>
 
 </body>
