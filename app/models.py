@@ -39,16 +39,18 @@ class Post(db.Model):
         index=True, default=lambda: datetime.now(timezone.utc))
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
                                                index=True)
+    tags = so.Mapped[str] = so.mapped_column(sa.String(250))
 
     author: so.Mapped[User] = so.relationship(back_populates='posts')
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
     
-    def __init__(self, title, body, author):
+    def __init__(self, title, body, tags, author):
         self.title = title
         self.body = body
         self.slug = slugify(title)
+        self.tags = self.tags.split()
         self.author = author
     
 @login.user_loader
