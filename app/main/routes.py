@@ -1,7 +1,7 @@
 from flask import render_template, url_for, redirect, flash, abort, request, current_app
 from app import db
 from app.main import bp
-from app.models import User, Post
+from app.models import User, Post, Tag
 from app.main.forms import PostForm
 import sqlalchemy as sa
 from flask_login import login_required, current_user
@@ -32,7 +32,7 @@ def create():
     if not current_user.is_authenticated:
         return redirect(url_for('main.index'))
     if form.validate_on_submit():
-        post = Post(title = form.title.data, body = form.body.data, tags = form.tags.data, author=current_user)
+        post = Post(title = form.title.data, body = form.body.data, tags = Tag(name=form.tags.data), author=current_user)
         db.session.add(post)
         db.session.commit()
         flash('Your post is now live!')

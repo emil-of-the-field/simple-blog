@@ -2,19 +2,17 @@ from datetime import datetime, timezone
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from sqlalchemy import Table, Column, ForeignKey
-from sqlalchemy.orm import column_property
-from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy import Table, Column, ForeignKey, ARRAY
 from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from slugify import slugify
 
 
-tags_table = db.Table(
-    'tags_assocation',
-    db.Column('post_id', db.ForeignKey('post.id'), primary_key=True),
-    db.Column('tag_id', db.ForeignKey('tag.id'), primary_key=True)
+tags_table = Table(
+    'tags_assocation', db.metadata,
+    sa.Column('post_id', sa.Integer(), sa.ForeignKey('post.id'), primary_key=True),
+    sa.Column('tag_id', sa.Integer(), sa.ForeignKey('tag.id'), primary_key=True)
 )
 
 class User(UserMixin, db.Model):
@@ -40,6 +38,7 @@ class User(UserMixin, db.Model):
 class Tag(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(64), index=True)
+    posts: so.WriteOnlyMapped['Post'] = so.relationship(secondary=tags_table, back_populates='tags')
 
     def __repr__(self):
         return f'<Tag> {self.name}'
@@ -54,22 +53,19 @@ class Post(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id),
                                                index=True)
     
-    tags: so.Mapped[Tag] = so.relationship(secondary=tags_table, back_populates='tags')
-
+    tags: so.Mapped[Tag] = so.relationship(secondary=tags_table, back_populates='posts')
     author: so.Mapped[User] = so.relationship(back_populates='posts')
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
     
-    def __init__(self, title, body, author):
-        self.title = title
+    def __init__(self, title, body, tags, author):
         self.body = body
+        self.title = title
         self.slug = slugify(title)
+        self.tags = tags
         self.author = author
 
-
-
-    
 @login.user_loader
 def load_user(id):
     return db.session.get(User, int(id))
